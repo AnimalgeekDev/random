@@ -2,6 +2,11 @@ kind: pipeline
 name: deploy-docker
 
 steps:
+- name: test 1
+  commands:
+  - ls /
+
+steps:
 - name: create-docker-container
   image: plugins/docker
   privileged: true
