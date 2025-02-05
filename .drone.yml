@@ -1,24 +1,12 @@
 kind: pipeline
+type: docker
 name: default
 
 steps:
-- name: test-docker
-  image: docker:dind
+- name: create-docker-container
+  image: docker
   volumes:
-  - name: docker_sock
+  - name: docker.sock
     path: /var/run/docker.sock
   commands:
-  - docker build -t latest
-
-services:
-  docker:
-    image: docker:dind
-    privileged: true
-    volumes:
-    - name: dockersock
-      path: /var/run
-
-volumes:
-  - name: docker_sock
-    host:
-      path: /var/run/docker.sock
+  - docker ps
