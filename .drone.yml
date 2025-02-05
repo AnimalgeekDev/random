@@ -1,7 +1,6 @@
 kind: pipeline
 name: default
 
-
 steps:
 - name: test-docker
   image: docker:dind
@@ -12,12 +11,12 @@ steps:
   - docker build -t latest
 
 services:
-- name: docker
-  image: docker:dind
-  privileged: true
-  volumes:
-  - name: dockersock
-    path: /var/run
+  docker:
+    image: docker:dind
+    privileged: true
+    volumes:
+    - name: dockersock
+      path: /var/run
 
 volumes:
   - name: docker_sock
