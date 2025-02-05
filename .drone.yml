@@ -1,26 +1,20 @@
 kind: pipeline
+type: docker
 name: default
 
 steps:
-- name: test
-  image: docker:dind
-  volumes:
-  - name: dockersock
-    path: /var/run
-  commands:
-  - sleep 5
-  - ls ./
-  - docker ps -a
-  - docker build -t my_future:latest .
+  - name: build-image
+    image: docker:latest
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    commands:
+      - docker build -t my_future:latest .
 
-services:
-- name: docker
-  image: docker:dind
-  privileged: true
-  volumes:
-  - name: dockersock
-    path: /var/run
-
-volumes:
-- name: dockersock
-  temp: {}
+  - name: run-container
+    image: docker:latest
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    commands:
+      - docker stop contenedor-c || true
+      - docker rm contenedor-c || true
+      - docker run -d --name contenedor-c my_future:latest
