@@ -1,4 +1,10 @@
-build:
-  image: my_future
+kind: pipeline
+type: docker
+name: default
+
+steps:
+- name: greeting
+  image: alpine
   commands:
-    - docker build -t
+  - echo hello
+  - echo world
