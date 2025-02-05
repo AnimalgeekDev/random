@@ -4,7 +4,7 @@ name: default
 
 steps:
 - name: create-docker-container
-  image: docker
+  image: docker:dind
   volumes:
   - name: docker.sock
     path: /var/run/docker.sock
