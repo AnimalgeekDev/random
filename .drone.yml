@@ -1,17 +1,24 @@
 kind: pipeline
-name: deploy-docker
+name: default
 
 steps:
-- name: test 1
+- name: test
+  image: docker:dind
+  volumes:
+  - name: dockersock
+    path: /var/run
   commands:
-  - ls /
+  - sleep 5 # give docker enough time to start
+  - docker ps -a
 
-steps:
-- name: create-docker-container
-  image: plugins/docker
+services:
+- name: docker
+  image: docker:dind
   privileged: true
   volumes:
-  - name: docker.sock
-    path: /var/run/docker.sock
-  commands:
-  - docker ps
+  - name: dockersock
+    path: /var/run
+
+volumes:
+- name: dockersock
+  temp: {}
