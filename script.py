@@ -4,16 +4,21 @@ import schedule
 from pymongo import MongoClient
 
 def get_mongo_collection():
+    print("Creating client and get conection")
     return MongoClient(f"mongodb://{username}:{password}@{server}:9001/?authSource=others").get_database("others").get_collection("my_future")
 
 def initialize_db(collection):
+    print("Creating DB")
     if collection.count_documents({}) == 0:
-        options = ["option 1", "opt la quiero menos", "seguro de esto?"]
+        print("Creating default options")
+        options = ["Desarrollo de video juegos", "Cyberseguridad", "Inteligencia artificial"]
         collection.insert_many([{"name": option, "weight": 1, "counter": 0} for option in options])
 
 def get_weighted_option(collection, number):
+    print("Determinate weight")
     options = list(collection.find({}, {"_id": 0, "name": 1, "weight": 1}))
     total_weight = sum(opt["weight"] for opt in options)
+    print(f"Weight {total_weight}")
     threshold = 0
     for option in options:
         threshold += (option["weight"] / total_weight) * 100
@@ -22,9 +27,11 @@ def get_weighted_option(collection, number):
     return options[-1]["name"]
 
 def update_counter(collection, option_name):
+    print(f"Update value")
     collection.update_one({"name": option_name}, {"$inc": {"counter": 1}})
 
 def process():
+    print(f"Run script")
     collection = get_mongo_collection()
     initialize_db(collection)
     update_counter(collection, get_weighted_option(collection, random.randint(0, 100)))
@@ -38,7 +45,7 @@ def main():
 
 username = "external"
 password = "password"
-server = "animalgeek.xyz"
+server = "mongodb"
 
 if __name__ == "__main__":
     main()

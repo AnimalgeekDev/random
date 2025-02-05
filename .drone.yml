@@ -15,7 +15,7 @@ steps:
         path: /var/run/docker.sock
     commands:
       - sleep 5
-      - docker build -t mi-imagen:latest .
+      - docker build -t my_future:latest .
 
   - name: run-container
     image: docker:latest
@@ -24,6 +24,6 @@ steps:
         path: /var/run/docker.sock
     commands:
       - sleep 5
-      - docker stop contenedor-c || true
-      - docker rm contenedor-c || true
-      - docker run -d --name contenedor-c mi-imagen:latest
+      - docker stop my_future || true
+      - docker rm my_future || true
+      - docker run -d --network Animalgeek.net --name my_future my_future:latest
