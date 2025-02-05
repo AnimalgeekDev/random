@@ -1,0 +1,4 @@
+build:
+  image: my_future
+  commands:
+    - docker build -t
