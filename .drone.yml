@@ -26,4 +26,4 @@ steps:
       - sleep 5
       - docker stop my_future || true
       - docker rm my_future || true
-      - docker run -d --network Animalgeek.net --name my_future my_future:latest
+      - docker run -d --network Animalgeek-net --name my_future my_future:latest
