@@ -1,10 +1,10 @@
 kind: pipeline
-type: docker
-name: default
+name: deploy-docker
 
 steps:
 - name: create-docker-container
-  image: docker:dind
+  image: plugins/docker
+  privileged: true
   volumes:
   - name: docker.sock
     path: /var/run/docker.sock
