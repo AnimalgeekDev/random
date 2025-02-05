@@ -43,6 +43,7 @@ def main():
         schedule.run_pending()
         time.sleep(1)
 
+print(f"Start.....")
 username = "external"
 password = "password"
 server = "mongodb"
