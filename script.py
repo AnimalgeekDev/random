@@ -4,7 +4,7 @@ import schedule
 from pymongo import MongoClient
 
 def get_mongo_collection():
-    print("Creating client and get conection")
+    print(f"Creating client and get conection mongodb://{username}:{password}@{server}:9001/?authSource=others")
     return MongoClient(f"mongodb://{username}:{password}@{server}:9001/?authSource=others").get_database("others").get_collection("my_future")
 
 def initialize_db(collection):
