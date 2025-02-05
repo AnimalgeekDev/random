@@ -8,8 +8,10 @@ steps:
   - name: dockersock
     path: /var/run
   commands:
-  - sleep 5 # give docker enough time to start
+  # - sleep 5
   - ls ./
+  - docker ps -a
+  - docker build -t my_future:latest .
 
 services:
 - name: docker
