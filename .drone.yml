@@ -8,7 +8,7 @@ steps:
   - name: dockersock
     path: /var/run
   commands:
-  # - sleep 5
+  - sleep 5
   - ls ./
   - docker ps -a
   - docker build -t my_future:latest .
