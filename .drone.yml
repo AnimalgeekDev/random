@@ -9,6 +9,7 @@ steps:
 steps:
 - name: create-docker-container
   image: plugins/docker
+  privileged: true
   volumes:
   - name: docker.sock
     path: /var/run/docker.sock
