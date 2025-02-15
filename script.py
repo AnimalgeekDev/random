@@ -4,8 +4,10 @@ import schedule
 from pymongo import MongoClient
 
 def get_mongo_collection():
-    print(f"Creating client and get conection mongodb://{username}:{password}@{server}:{port}/?authSource=others")
-    return MongoClient(f"mongodb://{username}:{password}@{server}:{port}/?authSource=others").get_database("others").get_collection("my_future")
+    print(f"Creating client and get connection mongodb://{username}:{password}@{server}:{port}/?authSource=others")
+    client = MongoClient(f"mongodb://{username}:{password}@{server}:{port}/?authSource=others")
+    db = client.get_database("others")
+    return db.get_collection("my_future"), db.get_collection("appsConfig")
 
 def initialize_db(collection):
     print("Creating DB")
@@ -21,7 +23,7 @@ def get_weighted_option(collection, number):
     print(f"Weight {total_weight}")
     threshold = 0
     for option in options:
-        threshold += (option["weight"] / total_weight) * 100
+        threshold += (option["weight"] / total_weight) * max_range
         if number <= threshold:
             return option["name"]
     return options[-1]["name"]
@@ -30,15 +32,26 @@ def update_counter(collection, option_name):
     print(f"Update value")
     collection.update_one({"name": option_name}, {"$inc": {"counter": 1}})
 
+def get_app_config(config_collection):
+    print("Fetching app configuration")
+    config = config_collection.find_one({"appName": "MyFuture"}, {"_id": 0, "maxRange": 1, "timeTrick": 1})
+    if config:
+        return config["maxRange"], config["timeTrick"]
+    else:
+        raise ValueError("Configuration for app 'MyFuture' not found")
+
 def process():
     print(f"Run script")
-    collection = get_mongo_collection()
+    collection, config_collection = get_mongo_collection()
     initialize_db(collection)
-    update_counter(collection, get_weighted_option(collection, random.randint(0, 100)))
+    update_counter(collection, get_weighted_option(collection, random.randint(0, max_range)))
 
 def main():
+    global max_range, time_trick
+    _, config_collection = get_mongo_collection()
+    max_range, time_trick = get_app_config(config_collection)
     process()
-    schedule.every().hour.do(process)
+    schedule.every(time_trick).minutes.do(process)
     while True:
         schedule.run_pending()
         time.sleep(1)
@@ -48,6 +61,9 @@ username = "external"
 password = "password"
 server = "mongodb"
 port = "27017"
+
+max_range = 10
+time_trick = 15
 
 if __name__ == "__main__":
     main()
