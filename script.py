@@ -35,7 +35,7 @@ def update_counter(collection, option_name):
 
 def get_app_config(config_collection):
     print("Fetching app configuration")
-    config = config_collection.find_one({"appName": "MyFuture"}, {"_id": 0, "maxRange": 1, "timeTrick": 1})
+    config = config_collection.find_one({"appName": "MyFuture"}, {"_id": 0, "maxRange": 1, "timeTrick": 1, "posibleOptions": 1})
     if config:
         return config["maxRange"], config["timeTrick"], config["posibleOptions"]
     else:
