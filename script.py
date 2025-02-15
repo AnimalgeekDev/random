@@ -23,11 +23,11 @@ def get_random_option(max_range, options):
     random_value = random.randint(0, max_range)
     
     if random_value < range_size:
-        return options[0]["name"]
+        return options[0]
     elif random_value < 2 * range_size:
-        return options[1]["name"]
+        return options[1]
     else:
-        return options[2]["name"]
+        return options[2]
 
 def update_counter(collection, option_name):
     print(f"Updating counter for option: {option_name}")
