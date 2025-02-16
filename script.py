@@ -1,6 +1,7 @@
 import random
 import time
 import schedule
+import secrets
 from pymongo import MongoClient
 
 def get_mongo_collection(username, password, server, port):
@@ -9,11 +10,10 @@ def get_mongo_collection(username, password, server, port):
     db = client.get_database("others")
     return db.get_collection("myFuture"), db.get_collection("appsConfig")
 
-def initialize_db(collection):
+def initialize_db(collection, options):
     print("Initializing DB")
     if collection.count_documents({}) == 0:
         print("Creating default options")
-        options = ["Desarrollo de video juegos", "Cyberseguridad", "Inteligencia artificial"]
         collection.insert_many([{"name": option, "counter": 0} for option in options])
 
 def get_random_option(max_range, options):
@@ -21,6 +21,12 @@ def get_random_option(max_range, options):
 
     range_size = max_range // len(options)
     random_value = random.randint(0, max_range)
+
+    print(f"Value random: {random_value}")
+
+    random.shuffle(options)
+
+    print(f"Options: {options}")
     
     if random_value < range_size:
         return options[0]
@@ -43,7 +49,7 @@ def get_app_config(config_collection):
 
 def process(collection, max_range, options):
     print("Running process")
-    initialize_db(collection)
+    initialize_db(collection, options)
     option = get_random_option(max_range, options)
     update_counter(collection, option)
 
@@ -62,6 +68,8 @@ def main():
     
     print(f"Scheduling task every {time_trick} minutes")
     schedule.every(time_trick).minutes.do(scheduled_task)
+
+    scheduled_task()
     
     while True:
         schedule.run_pending()
